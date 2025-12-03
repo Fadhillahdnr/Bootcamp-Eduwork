@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil Biodata Saya</title>
+  <style>
+    :root{ --accent:#0096fd; --muted:#eef2ff; --card:#ffffff }
+    *{box-sizing:border-box}
+    body{font-family:Arial, Helvetica, sans-serif; margin:0; color:#111; background:#f5f7ff}
+
+    /* NAV */
+    header.site-header{background:#0096fd; color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap}
+    .brand{font-weight:700; font-size:20px}
+    nav.top-nav{display:flex; gap:18px; flex-wrap:wrap; margin-top:8px}
+    nav.top-nav a{text-decoration:none; color:white; font-weight:600}
+
+    /* HERO */
+    .hero{display:grid; grid-template-columns:1fr 1fr; gap:24px; padding:40px 32px; align-items:center; max-width:1200px; margin:auto}
+    .hero h1{margin:0 0 12px; font-size:36px; color:#0096fd}
+    .hero p{margin:0 0 20px; color:#444; font-size:16px}
+    .cta{display:inline-block; padding:12px 18px; background:#0096fd; color:white; border-radius:6px; cursor:pointer; font-weight:600}
+    .hero .right{text-align:right}
+    .hero .right img{width:80%; max-width:380px; border-radius:12px; object-fit:cover; border:4px solid #dbe1ff}
+
+    /* ABOUT */
+    section.about{text-align:center; padding:40px 20px; background:white; border-top:4px solid #0096fd; border-bottom:4px solid #0096fd}
+    section.about h2{margin:0 0 10px; color:#0096fd; font-size:28px}
+    section.about p.lead{margin:0 0 24px; color:#555; font-size:16px}
+
+    .biodata-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+      gap:18px;
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 12px;
+    }
+    .biodata-box{
+      padding:18px;
+      background:white;
+      border-radius:12px;
+      border:2px solid #dbe1ff;
+      text-align:center;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+      font-size:15px;
+    }
+    .biodata-box strong{color:#0096fd; display:block; margin-top:6px}
+
+    /* PORTFOLIO */
+    section.portfolio{padding:40px 20px}
+    section.portfolio h2{text-align:center; margin-bottom:20px; color:#0096fd; font-size:28px}
+    .projects{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+      gap:20px;
+      max-width:1100px;
+      margin:auto;
+      padding:0 12px;
+    }
+    .project{
+      background:white;
+      border-radius:12px;
+      padding:16px;
+      border:2px solid #dbe1ff;
+      text-align:center;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+    .project img{width:100%; height:180px; object-fit:cover; border-radius:8px}
+    .project h3{margin:12px 0 6px; color:#0096fd; font-size:18px}
+    .project p{margin:0; color:#444}
+
+    /* FOOTER */
+    footer{padding:18px; text-align:center; color:#333; background:#eef2ff; font-size:15px}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr; text-align:center}
+      .hero .right{text-align:center}
+      .hero .right img{width:70%; margin:auto}
+      .hero h1{font-size:30px}
+    }
+
+    @media(max-width:600px){
+      header.site-header{flex-direction:column; text-align:center}
+      nav.top-nav{justify-content:center}
+      .hero h1{font-size:26px}
+      .hero p{font-size:14px}
+      .cta{padding:10px 16px}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Brand</div>
+    <nav class="top-nav">
+      <a href="#header">About Me</a>
+      <a href="#about">Biodata</a>
+      <a href="#portfolio">Portofolio</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="header">
+    <div class="left">
+      <h1>Selamat Datang di Website Saya</h1>
+      <p>Ini adalah contoh header dengan dua kolom yang sudah dibuat menggunakan grid layout, lebih berwarna, dan responsif.</p>
+      <button class="cta">Pelajari Lebih Lanjut</button>
+    </div>
+    <div class="right">
+      <img src="/img/fotoprofile.jpeg" alt="Foto Profil" />
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>About Me</h2>
+    <p class="lead">A brief introduction about myself</p>
+
+    <div class="biodata-grid">
+      <div class="biodata-box">Full Name<br><strong>Muhamad Fadhillah Dinurahman</strong></div>
+      <div class="biodata-box">Education<br><strong>S1 Informatika</strong></div>
+      <div class="biodata-box">Pekerjaan<br><strong>Mahasiswa</strong></div>
+      <div class="biodata-box">Contact<br><strong>0853-5366-3307</strong></div>
+      <div class="biodata-box">Hobi<br><strong>Programming, Sport</strong></div>
+      <div class="biodata-box">Alamat<br><strong>Sukabumi, Jawa Barat</strong></div>
+    </div>
+  </section>
+
+  <section class="portfolio" id="portfolio">
+    <h2>Portofolio</h2>
+    <div class="projects">
+
+      <div class="project">
+        <img src="/img/Loginproject.png" alt="Halaman Login Proyek" />
+        <h3>Proyek 1</h3>
+        <p>Halaman Login</p>
+      </div>
+
+      <div class="project">
+        <img src="/img/Project1.png" alt="Halaman Utama Proyek" />
+        <h3>Proyek 2</h3>
+        <p>Halaman Dashboard</p>
+      </div>
+
+      <div class="project">
+        <img src="/img/projectabsenjnt.png" alt="Absensi Proyek" />
+        <h3>Proyek 3</h3>
+        <p>Absensi Karyawan</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 - Muhamad Fadhillah Dinurahman
+  </footer>
+</body>
+</html>
