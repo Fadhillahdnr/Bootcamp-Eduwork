@@ -27,6 +27,8 @@ body {
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
+    margin-bottom: 0px;
+    margin-top: 0px;
     color: var(--primary-color) !important;
 }
 
@@ -79,6 +81,61 @@ body {
     background-color: #d63384;
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal background */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+/* Modal content box */
+.modal-content {
+  background: #667eea;
+  margin: 10% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* Close (X) */
+.close {
+  float: right;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.submit-btn {
+  display: block;
+  margin: 20px auto 0;  /* auto = center horizontal */
+  padding: 12px 40px;
+  background: #ec4899;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #4f46e5;
 }
 
 .hero-image {

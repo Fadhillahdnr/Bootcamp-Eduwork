@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio - Fadhillahdnr</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/img/logohead.jpeg">
     
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -48,7 +51,36 @@
             <div class="col-lg-6 hero-content">
                 <h1>Hi I am <span style="color: #fbbf24;">Muhammad Fadhillah</span> Web Developer</h1>
                 <p>I am a passionate Web Developer and Informatics student with hands-on experience building modern, responsive, and user-friendly web applications. I enjoy solving problems, writing clean code, and continuously learning new technologies. I’m ready to contribute to impactful digital products and collaborate effectively within any development team.</p>
-                <button class="btn-hire"><a class="nav-link" href="#contact">Hire Me</a></button>
+               <button class="btn-hire" onclick="openModal()">Hire Me</button>
+                
+               <!-- MODAL -->
+                <div id="hireModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2 style=" text-align: center;">Hire Me</h2>
+ 
+                    <form id="hireForm" method="POST" action="https://formspree.io/f/mkgdzpgg" class="row g-3">
+                        
+                        <label for="modal-name">Nama Lengkap</label>
+                        <input id="modal-name" name="name" type="text" class="form-control" required>
+
+                        <label for="modal-email">Email</label>
+                        <input id="modal-email" name="email" type="email" class="form-control" required>
+
+                        <label for="modal-message">Pesan</label>
+                        <textarea id="modal-message" name="message" rows="5" class="form-control" required></textarea>
+
+                        <button type="submit" id="cf-send" class="btn-submit w-100 mb-2">
+                            <span id="cf-send-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span id="cf-send-success" class="btn-success-icon d-none"><i class="bi bi-check-lg"></i></span>
+                            <span id="cf-send-text">Send Message</span>
+                        </button>
+
+                    </form>
+                </div>
+                </div>
+
+
                 <div class="social-icons">
                     <a href="https://wa.me/6285353663307" target="_blank" class="social-icon" title="WhatsApp">
                          <i class="bi bi-whatsapp"></i>
@@ -526,6 +558,32 @@
             navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
         }
     });
+
+    function openModal() {
+    document.getElementById('hireModal').style.display = 'block';
+    }
+
+    function closeModal() {
+    document.getElementById('hireModal').style.display = 'none';
+    }
+
+    // Klik area luar modal = tutup
+    window.onclick = function(e) {
+    const modal = document.getElementById('hireModal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+    }
+
+    document.getElementById('hireForm').addEventListener('submit', function(e) {
+    const btnText = document.getElementById('cf-send-text');
+    const btnSpinner = document.getElementById('cf-send-spinner');
+    const btnSuccess = document.getElementById('cf-send-success');
+
+    btnText.classList.add('d-none');
+    btnSpinner.classList.remove('d-none');
+    });
+
 </script>
 
 </body>
