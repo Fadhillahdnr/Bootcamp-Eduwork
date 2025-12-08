@@ -1,0 +1,18 @@
+h1 {
+    color: rgb(255, 255, 255);
+    font: 1em sans-serif;
+}
+
+p {
+    color: rgb(169, 156, 156);
+    font: 0.9em sans-serif;
+}
+
+header {
+    background-color: black;
+    padding: 10px;
+}
+
+body {
+    background-color: rgb(199, 252, 252);
+}
