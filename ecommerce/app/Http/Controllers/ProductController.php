@@ -5,13 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->get();
-        return view('admin.products.index', compact('products'));
+        $categories = Category::all();
+
+        $products = Product::with('category');
+
+        if ($request->category) {
+            $products->where('category_id', $request->category);
+        }
+
+        $products = $products->paginate(9);
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
 

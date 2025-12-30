@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-
+    
     Route::resource('/products', ProductController::class);
 });
 
@@ -36,10 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
-
-    // ✅ WAJIB lewat controller
-    Route::get('/user/dashboard', [HomeController::class, 'index'])
-        ->name('user.dashboard');
+Route::get('/user/dashboard', [HomeController::class, 'index'])->name('user.dashboard');
 });
 
 /*
@@ -52,7 +50,6 @@ Route::get('/product', [HomeController::class, 'product'])->name('product');
 Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.show');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
-Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,11 +57,11 @@ Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::get('/cart/increase/{id}', [CartController::class, 'increase'])->name('cart.increase');
-    Route::get('/cart/decrease/{id}', [CartController::class, 'decrease'])->name('cart.decrease');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/increase/{id}', [CartController::class, 'increase'])->name('cart.increase');
+Route::get('/cart/decrease/{id}', [CartController::class, 'decrease'])->name('cart.decrease');
 });
 
 /*
@@ -73,8 +70,18 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 });
 
+/*
+|--------------------------------------------------------------------------
+| UNTUK KIRIM ORDER KE ADMIN DARI USER
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
+Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.status');
+});
 

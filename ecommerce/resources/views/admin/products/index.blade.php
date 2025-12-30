@@ -1,16 +1,40 @@
-@extends('layouts.master')
+@extends('layouts.admin.master')
 
 @section('title','Produk')
 
 @section('content')
 
 <div class="container">
+
     <div class="d-flex justify-content-between align-items-center my-4">
         <h2>Daftar Produk</h2>
-        <a href="{{ url('/admin/products/create') }}" class="btn btn-success">
-            + Tambah Produk
-        </a>
+
+        <div>
+            <a href="{{ url('/admin/products/create') }}" class="btn btn-success">
+                + Tambah Produk
+            </a>
+            <a href="{{ url()->previous() }}" class="btn btn-secondary ms-2">
+                ← Kembali
+            </a>
+        </div>
     </div>
+
+    {{-- FILTER CATEGORY --}}
+    <form method="GET" action="{{ url('/admin/products') }}" class="mb-3">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="category" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Semua Kategori --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </form>
 
     <table class="table table-bordered">
         <thead class="table-dark">
@@ -18,6 +42,7 @@
                 <th>No</th>
                 <th>Gambar</th>
                 <th>Nama Produk</th>
+                <th>Kategori</th>
                 <th>Deskripsi</th>
                 <th>Harga</th>
                 <th>Aksi</th>
@@ -33,6 +58,9 @@
                              width="80" class="img-thumbnail">
                     </td>
                     <td>{{ $product->name }}</td>
+                    <td>
+                        {{ $product->category->name ?? '-' }}
+                    </td>
                     <td>{{ $product->description }}</td>
                     <td>Rp {{ number_format($product->price) }}</td>
                     <td>
@@ -52,7 +80,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="7" class="text-center">
                         Belum ada produk
                     </td>
                 </tr>

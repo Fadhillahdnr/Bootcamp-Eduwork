@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->get();
-        return view('user.dashboard', compact('products'));
+        $categories = Category::all();
+
+        $products = Product::with('category')
+            ->when($request->category, function ($query) use ($request) {
+                $query->where('category_id', $request->category);
+            })
+            ->latest()
+            ->get();
+
+        return view('user.dashboard', compact('products', 'categories'));
     }
 
     public function product(){
@@ -30,7 +39,4 @@ class HomeController extends Controller
         return view('pages.cart');
     }
 
-    public function checkout(){
-        return view('pages.checkout');
-    }
 }

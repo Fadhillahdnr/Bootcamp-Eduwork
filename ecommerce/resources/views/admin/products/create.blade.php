@@ -1,11 +1,16 @@
-@extends('layouts.master')
+@extends('layouts.admin.master')
 
 @section('title','Tambah Produk')
 
 @section('content')
 
 <div class="container">
-    <h2 class="my-4">Tambah Produk</h2>
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2>Tambah Produk</h2>
+        <a href="{{ url()->previous() }}" class="btn btn-secondary me-2">
+            ← Kembali
+        </a>    
+    </div>
 
     <form method="POST" action="{{ url('/admin/products') }}" enctype="multipart/form-data">
         @csrf
