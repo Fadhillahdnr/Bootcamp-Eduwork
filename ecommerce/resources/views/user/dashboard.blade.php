@@ -1,0 +1,72 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
+@extends('layouts.master')
+
+@section('title','Beranda')
+
+@section('content')
+
+<x-alert>
+    Selamat Datang di Toko Kami
+</x-alert>
+
+<div class="container">
+    <div class="col-12 text-center my-4">
+        <h1>Welcome to Our Store</h1>
+        <p class="lead">Discover our exclusive products below</p>
+    </div>
+
+    {{-- card produk --}}
+    <div class="row justify-content-center g-4">
+        @foreach ($products as $product)
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="{{ asset('storage/'.$product->image) }}"
+                        class="card-img-top">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $product->name }}</h5>
+                        <p class="card-text">
+                            {{ Str::limit($product->description, 80) }}
+                        </p>
+                        @if (strlen($product->description) > 80)
+                            <a class="text-decoration-none"
+                            data-bs-toggle="collapse"
+                            href="#desc-{{ $product->id }}"
+                            role="button">
+                                Baca selengkapnya
+                            </a>
+
+                            <div class="collapse mt-2" id="desc-{{ $product->id }}">
+                                <p class="card-text">
+                                    {{ $product->description }}
+                                </p>
+
+                                <a class="text-decoration-none"
+                                data-bs-toggle="collapse"
+                                href="#desc-{{ $product->id }}">
+                                    Tutup
+                                </a>
+                            </div>
+                        @endif
+
+                        <p class="fw-bold text-success">
+                            Rp {{ number_format($product->price) }}
+                        </p>
+                        <div>
+                            <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">Detail</a>
+                            <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success mt-2">
+                                Tambah ke Keranjang
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+    </div>
+</div>
+
+@endsection

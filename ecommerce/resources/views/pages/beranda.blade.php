@@ -1,6 +1,12 @@
 @extends('layouts.master')
 
+@section('title','Beranda')
 @section('content')
+
+ <x-alert>
+    Selamat Datang di Toko Kami
+</x-alert>
+
 <div class="container">
     <div class="col-12 text-center my-4">
         <h1>Welcome to Our Store</h1>
