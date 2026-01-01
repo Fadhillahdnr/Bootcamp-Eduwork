@@ -40,6 +40,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        // Cart tidak dihapus - akan tetap ada saat user login kembali
+        return redirect()->route('login')->with('success', 'Anda telah logout');
     }
 }

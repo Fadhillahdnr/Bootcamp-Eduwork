@@ -14,8 +14,8 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('cart') ? 'active' : '' }}"
-            href="{{ route('cart') }}">
+            <a class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}"
+            href="{{ route('cart.index') }}">
             Keranjang
             </a>
         </li>
@@ -28,9 +28,9 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('checkout') ? 'active' : '' }}"
-            href="{{ route('checkout') }}">
-            Checkout
+            <a class="nav-link {{ request()->routeIs('user.orders') ? 'active' : '' }}"
+            href="{{ route('user.orders') }}">
+            📦 Riwayat Pesanan
             </a>
         </li>
       </ul>

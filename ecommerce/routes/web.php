@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\Admin\OrderController;
 
 /*
@@ -19,17 +20,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN
+| HALAMAN UMUM (TANPA LOGIN)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-    
-    Route::resource('/products', ProductController::class);
-});
+Route::get('/', [HomeController::class, 'index'])->name('beranda');
+Route::get('/product', [HomeController::class, 'product'])->name('product');
+Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.show');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 /*
 |--------------------------------------------------------------------------
@@ -37,51 +34,73 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
-Route::get('/user/dashboard', [HomeController::class, 'index'])->name('user.dashboard');
+
+    Route::get('/user/dashboard', [HomeController::class, 'index'])
+        ->name('user.dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KERANJANG
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('cart.index');
+        Route::get('/add/{id}', [CartController::class, 'add'])->name('cart.add');
+        Route::get('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+        Route::get('/increase/{id}', [CartController::class, 'increase'])->name('cart.increase');
+        Route::get('/decrease/{id}', [CartController::class, 'decrease'])->name('cart.decrease');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECKOUT
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout.index');
+
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])
+        ->name('checkout.process');
+
+    /*
+    |--------------------------------------------------------------------------
+    | RIWAYAT PESANAN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/orders', [UserOrderController::class, 'history'])
+        ->name('user.orders');
+
+    Route::get('/orders/{id}', [UserOrderController::class, 'detail'])
+        ->name('user.orders.detail');
 });
 
 /*
 |--------------------------------------------------------------------------
-| HALAMAN UMUM
+| ADMIN
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('beranda');
-Route::get('/product', [HomeController::class, 'product'])->name('product');
-Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.show');
-Route::get('/about', [HomeController::class, 'about'])->name('about');
-Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-/*
-|--------------------------------------------------------------------------
-| KERANJANG
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:user'])->group(function () {
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::get('/cart/increase/{id}', [CartController::class, 'increase'])->name('cart.increase');
-Route::get('/cart/decrease/{id}', [CartController::class, 'decrease'])->name('cart.decrease');
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        Route::resource('/products', ProductController::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ORDER MANAGEMENT
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/orders', [OrderController::class, 'index'])
+            ->name('orders');
+
+        Route::get('/orders/{id}', [OrderController::class, 'show'])
+            ->name('orders.show');
+
+        Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])
+            ->name('orders.status');
 });
-
-/*
-|--------------------------------------------------------------------------
-| CHECKOUT
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:user'])->group(function () {
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-});
-
-/*
-|--------------------------------------------------------------------------
-| UNTUK KIRIM ORDER KE ADMIN DARI USER
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
-Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
-Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.status');
-});
-

@@ -10,3 +10,15 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.product-image {
+    width: 100%;        /* lebar ikut card */
+    height: 200px;      /* SEMUA gambar tinggi sama */
+    object-fit: cover; /* potong rapi, tidak gepeng */
+}
+
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -2,78 +2,127 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function add($id)
+    /**
+     * Get or create user's cart
+     */
+    private function getOrCreateCart()
     {
-        $product = Product::findOrFail($id);
-
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$id])) {
-            $cart[$id]['qty']++;
-        } else {
-            $cart[$id] = [
-                'name' => $product->name,
-                'price' => $product->price,
-                'image' => $product->image,
-                'qty' => 1
-            ];
-        }
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang');
+        return Cart::firstOrCreate([
+            'user_id' => Auth::id()
+        ]);
     }
 
+    /**
+     * Add product to cart
+     */
+    public function add($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $cart = $this->getOrCreateCart();
+
+            $item = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $id)
+                ->first();
+
+            if ($item) {
+                $item->increment('qty');
+                return back()->with('success', 'Jumlah produk ditambahkan');
+            } else {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $id,
+                    'qty' => 1
+                ]);
+                return back()->with('success', 'Produk ditambahkan ke keranjang');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menambahkan produk ke keranjang');
+        }
+    }
+
+    /**
+     * Show user's cart
+     */
     public function index()
     {
-        $cart = session('cart', []);
+        $cart = Cart::with('items.product')
+            ->where('user_id', Auth::id())
+            ->first();
+
+        // Jika user belum memiliki cart, buat cart kosong
+        if (!$cart) {
+            $cart = $this->getOrCreateCart();
+        }
+
         return view('pages.cart', compact('cart'));
     }
 
-    public function remove($id)
-    {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-        }
-
-        return redirect()->back();
-    }
-
+    /**
+     * Increase item quantity
+     */
     public function increase($id)
     {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$id])) {
-            $cart[$id]['qty']++;
-            session()->put('cart', $cart);
+        try {
+            $item = CartItem::findOrFail($id);
+            // Pastikan item milik user yang login
+            if ($item->cart->user_id != Auth::id()) {
+                return back()->with('error', 'Tidak diizinkan');
+            }
+            $item->increment('qty');
+            return back()->with('success', 'Jumlah ditambah');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengubah jumlah');
         }
-
-        return redirect()->back();
     }
 
+    /**
+     * Decrease item quantity
+     */
     public function decrease($id)
     {
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$id])) {
-            if ($cart[$id]['qty'] > 1) {
-                $cart[$id]['qty']--;
-            } else {
-                unset($cart[$id]);
+        try {
+            $item = CartItem::findOrFail($id);
+            // Pastikan item milik user yang login
+            if ($item->cart->user_id != Auth::id()) {
+                return back()->with('error', 'Tidak diizinkan');
             }
 
-            session()->put('cart', $cart);
+            if ($item->qty > 1) {
+                $item->decrement('qty');
+                return back()->with('success', 'Jumlah dikurangi');
+            } else {
+                $item->delete();
+                return back()->with('success', 'Produk dihapus dari keranjang');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengubah jumlah');
         }
-
-        return redirect()->back();
     }
 
+    /**
+     * Remove item from cart
+     */
+    public function remove($id)
+    {
+        try {
+            $item = CartItem::findOrFail($id);
+            // Pastikan item milik user yang login
+            if ($item->cart->user_id != Auth::id()) {
+                return back()->with('error', 'Tidak diizinkan');
+            }
+            $item->delete();
+            return back()->with('success', 'Produk dihapus dari keranjang');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus produk');
+        }
+    }
 }
+

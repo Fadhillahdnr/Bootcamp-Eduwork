@@ -17,7 +17,7 @@ class HomeController extends Controller
                 $query->where('category_id', $request->category);
             })
             ->latest()
-            ->get();
+            ->paginate(8);
 
         return view('user.dashboard', compact('products', 'categories'));
     }

@@ -17,22 +17,35 @@
 
         <div class="mb-3">
             <label>Nama Produk</label>
-            <input type="text" name="name" class="form-control">
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        {{-- PILIH CATEGORY --}}
+        <div class="mb-3">
+            <label>Kategori</label>
+            <select name="category_id" class="form-select" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-3">
             <label>Deskripsi</label>
-            <textarea name="description" class="form-control"></textarea>
+            <textarea name="description" class="form-control" required></textarea>
         </div>
 
         <div class="mb-3">
             <label>Harga</label>
-            <input type="number" name="price" class="form-control">
+            <input type="number" name="price" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label>Gambar</label>
-            <input type="file" name="image" class="form-control">
+            <input type="file" name="image" class="form-control" required>
         </div>
 
         <button class="btn btn-primary">Simpan</button>

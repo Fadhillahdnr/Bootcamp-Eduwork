@@ -12,6 +12,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         $parfum = Category::where('name', 'Parfum')->first();
+        $fashion = Category::where('name', 'Fashion')->first();
 
         Product::create([
             'category_id' => $parfum->id,
@@ -27,6 +28,22 @@ class ProductSeeder extends Seeder
             'description' => 'Aroma oud elegan dan maskulin',
             'price' => 275000,
             'image' => 'products/kahf2.jpg'
+        ]);
+
+        Product::create([
+            'category_id' => $fashion->id,
+            'name' => 'Baju Casual Pria',
+            'description' => 'Baju casual pria dengan kualitas tinggi',
+            'price' => 175000,
+            'image' => 'products/bajucasual.png'
+        ]);
+
+        Product::create([
+            'category_id' => $fashion->id,
+            'name' => 'Kemeja Pria Formal',
+            'description' => 'Kemeja pria formal dengan kualitas tinggi',
+            'price' => 200000,
+            'image' => 'products/kemejapria.png'
         ]);
     }
 }
