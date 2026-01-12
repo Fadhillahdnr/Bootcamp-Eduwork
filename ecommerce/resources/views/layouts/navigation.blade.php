@@ -12,14 +12,26 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('beranda')" :active="request()->routeIs('beranda')">
+                        {{ __('beranda') }}
                     </x-nav-link>
                 </div>
-                
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.orders')" :active="request()->routeIs('admin.orders')">
-                        {{ __('Kelola Pesanan') }}
+                    <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
+                        {{ __('Keranjang') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                        {{ __('Tentang Kami') }}
+                    </x-nav-link>
+                </div> 
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('user.orders')" :active="request()->routeIs('user.orders')">
+                        {{ __('📦 Riwayat Pesanan') }}
                     </x-nav-link>
                 </div>
             </div>

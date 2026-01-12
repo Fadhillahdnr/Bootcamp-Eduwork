@@ -191,7 +191,7 @@
     </div>
 
     <div class="mt-4 text-end">
-        <a href="{{ route('product') }}" class="btn btn-primary">
+        <a href="{{ route('beranda') }}" class="btn btn-primary">
             🛍️ Lanjut Belanja
         </a>
         <a href="{{ route('user.orders') }}" class="btn btn-secondary">
