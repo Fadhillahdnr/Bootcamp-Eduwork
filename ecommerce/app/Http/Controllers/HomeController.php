@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Events\ProductViewed;
 
 class HomeController extends Controller
 {
@@ -26,8 +27,22 @@ class HomeController extends Controller
         return view('pages.product');
     }
     
-    public function show($id){
+    
+    public function show($id)
+    {
+        // Ambil produk
         $product = Product::findOrFail($id);
+
+        // Tambah click produk
+        $product->increment('click_count');
+
+        // Hitung total klik semua produk
+        $totalClicks = Product::sum('click_count');
+
+        // Broadcast ke dashboard admin
+        broadcast(new ProductViewed($totalClicks))->toOthers();
+
+        // Tampilkan detail produk (USER)
         return view('user.product-detail', compact('product'));
     }
 

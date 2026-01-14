@@ -112,4 +112,12 @@ class ProductController extends Controller
 
         return back()->with('success', 'Produk berhasil dihapus');
     }
+
+    public function show(Product $product)
+    {
+        $product->increment('click_count');
+        event(new \App\Events\ProductViewed($product));
+        return view('products.show', compact('product'));
+    }
+
 }

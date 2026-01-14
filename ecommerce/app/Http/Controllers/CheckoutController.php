@@ -66,6 +66,7 @@ class CheckoutController extends Controller
                 'total' => $total,
                 'status' => $status,
             ]);
+            event(new \App\Events\OrderCreated($order));
 
             // Simpan order items dari cart
             foreach ($cart->items as $item) {
