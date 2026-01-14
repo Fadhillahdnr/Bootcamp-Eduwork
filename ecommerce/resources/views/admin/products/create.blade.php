@@ -12,6 +12,28 @@
         </a>    
     </div>
 
+    {{-- TAMBAH KATEGORI --}}
+        <div class="mb-4 p-3 border rounded bg-light">
+            <form method="POST" action="{{ route('admin.product-category.store') }}">
+                @csrf
+
+                <label class="form-label">Tambah Kategori Baru</label>
+                <div class="d-flex gap-2">
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        placeholder="Nama kategori"
+                        required
+                    >
+                    <button class="btn btn-success">
+                        + Tambah
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+    {{-- FORM TAMBAH PRODUK --}}
     <form method="POST" action="{{ url('/admin/products') }}" enctype="multipart/form-data">
         @csrf
 
@@ -24,7 +46,7 @@
         <div class="mb-3">
             <label>Kategori</label>
             <select name="category_id" class="form-select" required>
-                <option value="">-- Pilih Kategori --</option>
+                <option value="">-- Pilih Kategori --</option>  
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">
                         {{ $category->name }}

@@ -10,6 +10,7 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\ProductCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,11 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile.edit');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 });
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +105,9 @@ Route::middleware(['auth', 'role:admin'])
 
         // ✅ PRODUCT MANAGEMENT
         Route::resource('products', ProductController::class);
+
+        Route::post('/product-category', [ProductCategoryController::class, 'store'])
+            ->name('product-category.store');
 
         /*
         |--------------------------------------------------------------------------
