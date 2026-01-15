@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('user.layouts.master')
 
 @section('title', $product->name)
 
@@ -21,6 +21,7 @@
             <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success mt-2">
                 Tambah ke Keranjang
             </a>
+            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">← Kembali</a>
         </div>
     </div>
 </div>

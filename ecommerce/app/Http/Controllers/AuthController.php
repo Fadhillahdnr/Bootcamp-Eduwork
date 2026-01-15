@@ -22,11 +22,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-
-            return redirect()->route('user.dashboard');
+            return Auth::user()->role === 'admin'
+                ? redirect()->route('admin.dashboard')
+                : redirect()->route('user.dashboard');
         }
 
         return back()->withErrors([
@@ -37,10 +35,11 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Cart tidak dihapus - akan tetap ada saat user login kembali
-        return redirect()->route('login')->with('success', 'Anda telah logout');
+        return redirect()->route('login')
+            ->with('success', 'Anda telah logout');
     }
 }

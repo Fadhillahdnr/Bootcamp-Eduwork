@@ -22,10 +22,6 @@ class HomeController extends Controller
 
         return view('user.dashboard', compact('products', 'categories'));
     }
-
-    public function product(){
-        return view('pages.product');
-    }
     
     
     public function show($id)
@@ -47,11 +43,11 @@ class HomeController extends Controller
     }
 
     public function about(){
-        return view('pages.about');
+        return view('user.about');
     }
     
     public function cart(){
-        return view('pages.cart');
+        return view('user.cart');
     }
 
 }

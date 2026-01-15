@@ -62,7 +62,7 @@ class CartController extends Controller
             $cart = $this->getOrCreateCart();
         }
 
-        return view('pages.cart', compact('cart'));
+        return view("user.cart", compact('cart'));
     }
 
     /**

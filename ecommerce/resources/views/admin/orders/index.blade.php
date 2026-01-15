@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('admin.layouts.master')
 
 @section('title','Daftar Pesanan')
 
@@ -6,9 +6,7 @@
 <div class="container my-4"> 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>📦 Daftar Pesanan</h2>
-        <a href="{{ url()->previous() }}" class="btn btn-secondary">
-            ← Kembali
-        </a>    
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">← Kembali</a>   
     </div>
 
     @if (session('success'))

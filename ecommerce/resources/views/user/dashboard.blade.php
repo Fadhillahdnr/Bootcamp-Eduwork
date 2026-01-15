@@ -2,7 +2,7 @@
         use Illuminate\Support\Str;
     @endphp
 
-    @extends('layouts.master')
+    @extends('user.layouts.master')
 
     @section('title','Beranda')
 

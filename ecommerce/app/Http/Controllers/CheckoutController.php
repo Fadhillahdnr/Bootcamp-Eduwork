@@ -21,7 +21,7 @@ class CheckoutController extends Controller
                 ->with('error', 'Keranjang masih kosong');
         }
 
-        return view('pages.checkout', compact('cart'));
+        return view('user.checkout', compact('cart'));
     }
 
     public function process(Request $request)
