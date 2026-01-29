@@ -16,7 +16,7 @@ class DashboardController extends Controller
             'totalProducts' => Product::count(),
             'totalCategories' => Category::count(),
             'totalOrders' => Orders::count(),
-            'totalClicks' => Product::sum('click_count'),
+            'totalClicks' => Product::sum('views'),
         ]);
     }
 }

@@ -53,12 +53,12 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
-                        <tr class="small text-muted">
+                        <tr class="small text-muted text-center">
                             <th width="50">No</th>
                             <th>Produk</th>
                             <th>Kategori</th>
                             <th>Harga</th>
-                            <th class="text-end">Aksi</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
 
@@ -101,7 +101,7 @@
                                 </td>
 
                                 {{-- AKSI --}}
-                                <td class="text-end">
+                                <td class="text-end ">
                                     <a href="{{ url('/admin/products/'.$product->id.'/edit') }}"
                                        class="btn btn-outline-warning btn-sm">
                                         ✏️ Edit

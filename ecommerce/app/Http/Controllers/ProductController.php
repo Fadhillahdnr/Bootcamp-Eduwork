@@ -115,9 +115,20 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $product->increment('click_count');
-        event(new \App\Events\ProductViewed($product));
-        return view('products.show', compact('product'));
-    }
+        // DEBUG: pastikan method ini terpanggil
+        // dd('SHOW HIT', $product->id);
 
+        $sessionKey = 'viewed_product_' . $product->id;
+
+        if (!session()->has($sessionKey)) {
+            $product->increment('views');
+
+            // Broadcast ke admin
+            broadcast(new \App\Events\ProductViewed())->toOthers();
+
+            session()->put($sessionKey, true);
+        }
+
+        return view('user.products.show', compact('product'));
+    }
 }

@@ -18,7 +18,7 @@ use App\Http\Controllers\ProfileController;
 */
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
 Route::get('/product', [HomeController::class, 'product'])->name('product');
-Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.show');
+Route::get('/product/{product}', [HomeController::class, 'show'])->name('product.show');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 /*
@@ -71,6 +71,8 @@ Route::middleware(['auth', 'role:admin'])
             ->name('dashboard');
 
         Route::resource('products', ProductController::class);
+        Route::get('/product/{product}', [ProductController::class, 'show'])
+        ->name('product.show');
 
         Route::post('/product-category', [ProductCategoryController::class, 'store'])
             ->name('product-category.store');

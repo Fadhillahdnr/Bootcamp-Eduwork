@@ -18,7 +18,8 @@
 
             <p>{{ $product->description }}</p>
 
-            <a href="{{ route('cart.add', $product->id) }}" class="btn btn-success mt-2">
+            <a href="{{ route('cart.add', ['id' => $product->id]) }}" 
+                class="btn btn-success mt-2">
                 Tambah ke Keranjang
             </a>
             <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">← Kembali</a>

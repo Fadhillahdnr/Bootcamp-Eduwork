@@ -11,9 +11,21 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'image'
+        'image',
+        'views', // 🔥 WAJIB
     ];
 
+    /**
+     * Cast data type
+     */
+    protected $casts = [
+        'price' => 'integer',
+        'views' => 'integer',
+    ];
+
+    /**
+     * Relasi ke Category
+     */
     public function category()
     {
         return $this->belongsTo(Category::class);

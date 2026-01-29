@@ -23,22 +23,18 @@ class HomeController extends Controller
         return view('user.dashboard', compact('products', 'categories'));
     }
     
-    
-    public function show($id)
+    public function show(Product $product)
     {
-        // Ambil produk
-        $product = Product::findOrFail($id);
+        $sessionKey = 'viewed_product_' . $product->id;
 
-        // Tambah click produk
-        $product->increment('click_count');
+        if (!session()->has($sessionKey)) {
+            $product->increment('views');
 
-        // Hitung total klik semua produk
-        $totalClicks = Product::sum('click_count');
+            broadcast(new \App\Events\ProductViewed($product))->toOthers();
 
-        // Broadcast ke dashboard admin
-        broadcast(new ProductViewed($totalClicks))->toOthers();
+            session()->put($sessionKey, true);
+        }
 
-        // Tampilkan detail produk (USER)
         return view('user.product-detail', compact('product'));
     }
 

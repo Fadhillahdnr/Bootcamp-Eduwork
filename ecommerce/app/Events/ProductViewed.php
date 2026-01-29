@@ -4,33 +4,51 @@ namespace App\Events;
 
 use App\Models\Product;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class ProductViewed implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
-    public $product;
+    /**
+     * Total klik semua produk
+     */
     public $total_clicks;
 
-    public function __construct($product)
+    /**
+     * Create a new event instance.
+     */
+    public function __construct()
     {
-        $this->product = $product;
-
-        // Hitung total klik semua produk
-        $this->total_clicks = Product::sum('click_count');
+        // 🔥 SUM dari kolom views (SATU-SATUNYA SUMBER DATA)
+        $this->total_clicks = Product::sum('views');
     }
 
+    /**
+     * Channel broadcast
+     */
     public function broadcastOn()
     {
         return new Channel('admin-dashboard');
     }
 
+    /**
+     * Event name
+     */
     public function broadcastAs()
     {
         return 'product.viewed';
+    }
+
+    /**
+     * Data yang dikirim ke frontend
+     */
+    public function broadcastWith()
+    {
+        return [
+            'total_clicks' => $this->total_clicks,
+        ];
     }
 }
