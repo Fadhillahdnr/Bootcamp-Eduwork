@@ -20,28 +20,71 @@
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">← Kembali</a>
             </div>
 
-            {{-- TAMBAH KATEGORI --}}
+            {{-- KATEGORI PRODUK --}}
             <div class="border rounded p-3 mb-4 bg-light">
+
+                {{-- TAMBAH KATEGORI --}}
                 <form method="POST"
-                      action="{{ route('admin.product-category.store') }}">
+                    action="{{ route('admin.product-category.store') }}">
                     @csrf
 
                     <label class="form-label fw-semibold">
                         Tambah Kategori Baru
                     </label>
 
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 mb-3">
                         <input type="text"
-                               name="name"
-                               class="form-control form-control-sm"
-                               placeholder="Nama kategori"
-                               required>
+                            name="name"
+                            class="form-control form-control-sm"
+                            placeholder="Nama kategori"
+                            required>
 
                         <button class="btn btn-dark btn-sm">
                             + Tambah
                         </button>
                     </div>
                 </form>
+
+                {{-- DAFTAR KATEGORI --}}
+                @if ($categories->count())
+                    <hr>
+
+                    <label class="form-label fw-semibold mb-2">
+                        Daftar Kategori
+                    </label>
+
+                    <ul class="list-group list-group-sm">
+                        @foreach ($categories as $category)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                <span>{{ $category->name }}</span>
+
+                                <div class="d-flex gap-1">
+
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('admin.product-category.edit', $category->id) }}"
+                                    class="btn btn-outline-warning btn-sm">
+                                        ✏️
+                                    </a>
+
+                                    {{-- HAPUS --}}
+                                    <form action="{{ route('admin.product-category.destroy', $category->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Yakin hapus kategori ini?')">
+                                            🗑
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+
             </div>
 
             {{-- FORM PRODUK --}}
