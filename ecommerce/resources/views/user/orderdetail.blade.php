@@ -3,185 +3,142 @@
 @section('title','Detail Pesanan')
 
 @section('content')
-<div class="container my-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📋 Detail Pesanan #{{ $order->id }}</h2>
-        <a href="{{ route('user.orders') }}" class="btn btn-secondary">← Kembali ke Riwayat</a>
-    </div>
+<div class="container my-5">
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">Detail Pesanan</h4>
+            <small class="text-muted">Order ID #{{ $order->id }}</small>
         </div>
-    @endif
+        <a href="{{ route('user.orders') }}" class="btn btn-outline-secondary btn-sm">
+            ← Kembali
+        </a>
+    </div>
 
     <div class="row">
-        <!-- Kolom Kiri: Info Pesanan dan Pengiriman -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">📍 Informasi Pengiriman</h5>
-                </div>
+        {{-- INFO PENGIRIMAN --}}
+        <div class="col-lg-5 mb-4">
+            <div class="card border-0 shadow-sm rounded-lg h-100">
                 <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-3">Informasi Pengiriman</h6>
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nama Penerima:</label>
-                        <p class="form-control-plaintext">{{ $order->name }}</p>
+                        <small class="text-muted">Nama Penerima</small>
+                        <div class="font-weight-bold">{{ $order->name }}</div>
                     </div>
-                    
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Alamat:</label>
-                        <p class="form-control-plaintext">{{ $order->address }}</p>
+                        <small class="text-muted">Alamat</small>
+                        <div>{{ $order->address }}</div>
                     </div>
-                    
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nomor Telepon:</label>
-                        <p class="form-control-plaintext">{{ $order->phone }}</p>
+                        <small class="text-muted">No. Telepon</small>
+                        <div>{{ $order->phone }}</div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Metode Pembayaran:</label>
-                        <p class="form-control-plaintext">
-                            <span class="badge bg-primary">
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block">Metode Pembayaran</small>
+                            <span class="badge badge-primary px-3 py-2">
                                 {{ strtoupper($order->payment_method) }}
                             </span>
-                        </p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tanggal Pesanan:</label>
-                        <p class="form-control-plaintext">
-                            {{ $order->created_at->format('d F Y H:i') }}
-                        </p>
+                        </div>
+                        <div class="text-right">
+                            <small class="text-muted d-block">Tanggal</small>
+                            <strong>{{ $order->created_at->format('d M Y') }}</strong>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Kolom Kanan: Status Pesanan -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">📊 Status Pesanan</h5>
-                </div>
+        {{-- STATUS --}}
+        <div class="col-lg-7 mb-4">
+            <div class="card border-0 shadow-sm rounded-lg h-100">
                 <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-4">Status Pesanan</h6>
+
                     @php
-                        $statusColor = match($order->status) {
-                            'diproses' => 'warning',
-                            'dikirim' => 'info',
-                            'selesai' => 'success',
-                            'menunggu pembayaran' => 'danger',
-                            default => 'secondary'
-                        };
-                        
-                        $statusIcon = match($order->status) {
-                            'diproses' => '⚙️',
-                            'dikirim' => '🚚',
-                            'selesai' => '✅',
-                            'menunggu pembayaran' => '⏳',
-                            default => '❓'
+                        $steps = [
+                            'dibuat' => 'Pesanan Dibuat',
+                            'diproses' => 'Diproses',
+                            'dikirim' => 'Dikirim',
+                            'selesai' => 'Selesai',
+                        ];
+
+                        $activeStep = match($order->status) {
+                            'menunggu pembayaran' => 1,
+                            'diproses' => 2,
+                            'dikirim' => 3,
+                            'selesai' => 4,
+                            default => 1
                         };
                     @endphp
-                    
-                    <div class="text-center mb-4">
-                        <div class="mb-3">
-                            <span style="font-size: 48px;">{{ $statusIcon }}</span>
-                        </div>
-                        <h3>
-                            <span class="badge bg-{{ $statusColor }} fs-5 py-2 px-3">
-                                {{ ucfirst($order->status) }}
-                            </span>
-                        </h3>
+
+                    {{-- STEPPER --}}
+                    <div class="stepper">
+                        @foreach ($steps as $i => $label)
+                            @php $index = $loop->iteration; @endphp
+                            <div class="step {{ $index <= $activeStep ? 'active' : '' }}">
+                                <div class="circle">{{ $index }}</div>
+                                <div class="label">{{ $label }}</div>
+                            </div>
+                        @endforeach
                     </div>
 
-                    <!-- Timeline Status -->
-                    <div class="timeline">
-                        <div class="timeline-item {{ $order->status != 'menunggu pembayaran' ? 'completed' : '' }}">
-                            <div class="timeline-marker">✓</div>
-                            <div class="timeline-content">
-                                <strong>Pesanan Dibuat</strong>
-                                <small class="text-muted d-block">{{ $order->created_at->format('d M Y') }}</small>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item {{ in_array($order->status, ['diproses', 'dikirim', 'selesai']) ? 'completed' : '' }}">
-                            <div class="timeline-marker">{{ in_array($order->status, ['diproses', 'dikirim', 'selesai']) ? '✓' : '◎' }}</div>
-                            <div class="timeline-content">
-                                <strong>Sedang Diproses</strong>
-                                <small class="text-muted d-block">Admin sedang mempersiapkan pesanan Anda</small>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item {{ in_array($order->status, ['dikirim', 'selesai']) ? 'completed' : '' }}">
-                            <div class="timeline-marker">{{ in_array($order->status, ['dikirim', 'selesai']) ? '✓' : '◎' }}</div>
-                            <div class="timeline-content">
-                                <strong>Dikirim</strong>
-                                <small class="text-muted d-block">Pesanan dalam perjalanan ke tangan Anda</small>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item {{ $order->status == 'selesai' ? 'completed' : '' }}">
-                            <div class="timeline-marker">{{ $order->status == 'selesai' ? '✓' : '◎' }}</div>
-                            <div class="timeline-content">
-                                <strong>Selesai</strong>
-                                <small class="text-muted d-block">Pesanan telah diterima dengan baik</small>
-                            </div>
-                        </div>
-                    </div>
-
+                    {{-- ALERT PEMBAYARAN --}}
                     @if ($order->status == 'menunggu pembayaran')
-                        <div class="alert alert-danger mt-4">
-                            <strong>⚠️ Pembayaran Menunggu</strong>
-                            <p class="mb-0 mt-2">Silakan lakukan pembayaran sebesar <strong>Rp {{ number_format($order->total) }}</strong> untuk menyelesaikan pesanan ini.</p>
+                        <div class="alert alert-danger mt-4 mb-0">
+                            <strong>Menunggu Pembayaran</strong><br>
+                            Silakan lakukan pembayaran sebesar
+                            <strong>Rp {{ number_format($order->total) }}</strong>
                         </div>
                     @endif
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tabel Items Pesanan -->
-    <div class="card shadow-sm mt-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">🛍️ Detail Produk</h5>
-        </div>
+    {{-- PRODUK --}}
+    <div class="card border-0 shadow-sm rounded-lg mt-4">
         <div class="card-body">
+            <h6 class="text-uppercase text-muted mb-3">Produk Dipesan</h6>
+
             <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="table-light">
+                <table class="table align-middle">
+                    <thead class="thead-light">
                         <tr>
                             <th>Produk</th>
-                            <th class="text-end">Harga Satuan</th>
+                            <th class="text-right">Harga</th>
                             <th class="text-center">Qty</th>
-                            <th class="text-end">Subtotal</th>
+                            <th class="text-right">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php $totalVerify = 0; @endphp
                         @foreach ($order->items as $item)
-                            @php $totalVerify += $item->subtotal; @endphp
-                            <tr>
-                                <td>
-                                    <strong>{{ $item->product_name }}</strong><br>
-                                    <small class="text-muted">Kode: {{ $item->product_id }}</small>
-                                </td>
-                                <td class="text-end">
-                                    Rp {{ number_format($item->price) }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark">{{ $item->qty }}</span>
-                                </td>
-                                <td class="text-end">
-                                    <strong>Rp {{ number_format($item->subtotal) }}</strong>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <strong>{{ $item->product_name }}</strong><br>
+                                <small class="text-muted">#{{ $item->product_id }}</small>
+                            </td>
+                            <td class="text-right">Rp {{ number_format($item->price) }}</td>
+                            <td class="text-center">{{ $item->qty }}</td>
+                            <td class="text-right font-weight-bold">
+                                Rp {{ number_format($item->subtotal) }}
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr class="table-light">
-                            <th colspan="3" class="text-end">Total Pesanan:</th>
-                            <th class="text-end">
-                                <h5 class="mb-0">Rp {{ number_format($order->total) }}</h5>
+                        <tr>
+                            <th colspan="3" class="text-right">Total</th>
+                            <th class="text-right text-primary">
+                                Rp {{ number_format($order->total) }}
                             </th>
                         </tr>
                     </tfoot>
@@ -190,63 +147,55 @@
         </div>
     </div>
 
-    <div class="mt-4 text-end">
-        <a href="{{ route('beranda') }}" class="btn btn-primary">
-            🛍️ Lanjut Belanja
-        </a>
-        <a href="{{ route('user.orders') }}" class="btn btn-secondary">
-            📦 Lihat Semua Pesanan
+    {{-- ACTION --}}
+    <div class="text-right mt-4">
+        <a href="{{ route('beranda') }}" class="btn btn-primary px-4">
+            Lanjut Belanja
         </a>
     </div>
+
 </div>
 
+{{-- STYLE --}}
 <style>
-    .timeline {
-        position: relative;
-        padding: 20px 0;
-    }
-
-    .timeline-item {
-        display: flex;
-        margin-bottom: 30px;
-        position: relative;
-    }
-
-    .timeline-item.completed .timeline-marker {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .timeline-marker {
-        min-width: 40px;
-        height: 40px;
-        background-color: #e9ecef;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        margin-right: 20px;
-        flex-shrink: 0;
-    }
-
-    .timeline-content {
-        flex: 1;
-        padding-top: 5px;
-    }
-
-    .timeline-item:not(:last-child)::before {
-        content: '';
-        position: absolute;
-        left: 19px;
-        top: 40px;
-        bottom: -30px;
-        width: 2px;
-        background-color: #dee2e6;
-    }
-
-    .timeline-item.completed:not(:last-child)::before {
-        background-color: #28a745;
-    }
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+.stepper::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #dee2e6;
+}
+.step {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+.step .circle {
+    width: 36px;
+    height: 36px;
+    margin: auto;
+    border-radius: 50%;
+    background: #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.step.active .circle {
+    background: #007bff;
+    color: #fff;
+}
+.step .label {
+    margin-top: 8px;
+    font-size: 13px;
+}
 </style>
 @endsection

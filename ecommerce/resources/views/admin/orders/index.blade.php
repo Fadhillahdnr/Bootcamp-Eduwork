@@ -3,28 +3,40 @@
 @section('title','Daftar Pesanan')
 
 @section('content')
-<div class="container my-4"> 
+<div class="container my-5 text-dark">
+
+    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📦 Daftar Pesanan</h2>
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">← Kembali</a>   
+        <div>
+            <h3 class="fw-bold mb-1">📦 Daftar Pesanan</h3>
+            <small class="text-muted">Kelola dan pantau seluruh pesanan pelanggan</small>
+        </div>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">
+            ← Kembali
+        </a>
     </div>
 
+    {{-- ALERT --}}
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Total Pesanan: {{ $orders->total() }}</h5>
+    {{-- CARD --}}
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-semibold">
+                Total Pesanan: {{ $orders->total() }}
+            </h6>
         </div>
-        <div class="card-body">
+
+        <div class="card-body text-dark">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead class="table-dark">
-                        <tr>
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr class="text-center">
                             <th>ID</th>
                             <th>Pembeli</th>
                             <th>Email</th>
@@ -35,29 +47,41 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @forelse ($orders as $order)
                             <tr>
-                                <td>
-                                    <strong>#{{ $order->id }}</strong>
+                                {{-- ID --}}
+                                <td class="text-center fw-semibold">
+                                    #{{ $order->id }}
                                 </td>
+
+                                {{-- NAME --}}
                                 <td>{{ $order->name }}</td>
+
+                                {{-- EMAIL --}}
                                 <td>
                                     @if ($order->user)
-                                        <small>{{ $order->user->email }}</small>
+                                        <small class="text-muted">{{ $order->user->email }}</small>
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <strong>Rp {{ number_format($order->total) }}</strong>
+
+                                {{-- TOTAL --}}
+                                <td class="fw-semibold">
+                                    Rp {{ number_format($order->total) }}
                                 </td>
-                                <td>
-                                    <span class="badge bg-primary">
+
+                                {{-- PAYMENT --}}
+                                <td class="text-center">
+                                    <span class="badge bg-primary px-3 py-2">
                                         {{ strtoupper($order->payment_method) }}
                                     </span>
                                 </td>
-                                <td>
+
+                                {{-- STATUS --}}
+                                <td class="text-center">
                                     @php
                                         $statusColor = match($order->status) {
                                             'diproses' => 'warning',
@@ -68,24 +92,32 @@
                                             default => 'secondary'
                                         };
                                     @endphp
-                                    <span class="badge bg-{{ $statusColor }}">
+
+                                    <span class="badge bg-{{ $statusColor }} px-3 py-2">
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </td>
-                                <td>
-                                    <small>{{ $order->created_at->format('d M Y H:i') }}</small>
+
+                                {{-- DATE --}}
+                                <td class="text-center">
+                                    <small class="text-muted">
+                                        {{ $order->created_at->format('d M Y') }}<br>
+                                        {{ $order->created_at->format('H:i') }}
+                                    </small>
                                 </td>
-                                <td>
+
+                                {{-- ACTION --}}
+                                <td class="text-center">
                                     <a href="{{ route('admin.orders.show', $order->id) }}"
-                                       class="btn btn-sm btn-primary">
-                                       📋 Detail
+                                       class="btn btn-sm btn-outline-primary">
+                                        📋 Detail
                                     </a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">
-                                    Belum ada pesanan
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    📭 Belum ada pesanan masuk
                                 </td>
                             </tr>
                         @endforelse
@@ -95,11 +127,12 @@
         </div>
     </div>
 
-    <!-- Pagination -->
+    {{-- PAGINATION --}}
     @if ($orders->hasPages())
         <div class="d-flex justify-content-center mt-4">
             {{ $orders->links() }}
         </div>
     @endif
+
 </div>
 @endsection

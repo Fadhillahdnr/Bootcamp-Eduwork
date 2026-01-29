@@ -3,17 +3,18 @@
 @section('title','Produk')
 
 @section('content')
-
-<div class="container py-4">
+<div class="container my-5 text-dark">
 
     <div class="card shadow-sm border-0">
-        <div class="card-body">
+        <div class="card-body text-dark">
 
             {{-- HEADER --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h5 class="fw-semibold mb-0">Daftar Produk</h5>
-                    <small class="text-muted">Kelola seluruh produk yang tersedia</small>
+                    <h4 class="fw-bold mb-1">📦 Daftar Produk</h4>
+                    <small class="text-muted">
+                        Kelola seluruh produk yang tersedia
+                    </small>
                 </div>
 
                 <div class="d-flex gap-2">
@@ -22,11 +23,14 @@
                         + Produk
                     </a>
 
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">← Kembali</a>
+                    <a href="{{ route('admin.dashboard') }}"
+                       class="btn btn-outline-secondary btn-sm">
+                        ← Kembali
+                    </a>
                 </div>
             </div>
 
-            {{-- FILTER KATEGORI --}}
+            {{-- FILTER --}}
             <form method="GET" action="{{ url('/admin/products') }}" class="mb-4">
                 <div class="row">
                     <div class="col-md-4">
@@ -48,9 +52,9 @@
             {{-- TABLE --}}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="text-muted small">
-                        <tr>
-                            <th width="40">No</th>
+                    <thead class="table-light">
+                        <tr class="small text-muted">
+                            <th width="50">No</th>
                             <th>Produk</th>
                             <th>Kategori</th>
                             <th>Harga</th>
@@ -61,7 +65,9 @@
                     <tbody>
                         @forelse ($products as $product)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="fw-semibold">
+                                    {{ $loop->iteration }}
+                                </td>
 
                                 {{-- PRODUK --}}
                                 <td>
@@ -72,11 +78,11 @@
                                              class="rounded border object-fit-cover">
 
                                         <div>
-                                            <div class="fw-semibold">
+                                            <div class="fw-semibold text-dark">
                                                 {{ $product->name }}
                                             </div>
                                             <small class="text-muted">
-                                                {{ Str::limit($product->description, 40) }}
+                                                {{ Str::limit($product->description, 45) }}
                                             </small>
                                         </div>
                                     </div>
@@ -84,7 +90,7 @@
 
                                 {{-- KATEGORI --}}
                                 <td>
-                                    <span class="badge bg-light text-dark border">
+                                    <span class="badge bg-light text-dark border px-3 py-2">
                                         {{ $product->category->name ?? '-' }}
                                     </span>
                                 </td>
@@ -98,7 +104,7 @@
                                 <td class="text-end">
                                     <a href="{{ url('/admin/products/'.$product->id.'/edit') }}"
                                        class="btn btn-outline-warning btn-sm">
-                                        Edit
+                                        ✏️ Edit
                                     </a>
 
                                     <form action="{{ url('/admin/products/'.$product->id) }}"
@@ -106,9 +112,10 @@
                                           class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-outline-danger btn-sm"
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
                                                 onclick="return confirm('Yakin hapus produk ini?')">
-                                            Hapus
+                                            🗑 Hapus
                                         </button>
                                     </form>
                                 </td>
@@ -116,8 +123,8 @@
                         @empty
                             <tr>
                                 <td colspan="5"
-                                    class="text-center text-muted py-4">
-                                    Belum ada produk
+                                    class="text-center text-muted py-5">
+                                    📭 Belum ada produk
                                 </td>
                             </tr>
                         @endforelse
@@ -127,7 +134,5 @@
 
         </div>
     </div>
-
 </div>
-
 @endsection

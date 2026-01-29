@@ -14,31 +14,6 @@
         </div> 
     @endif
 
-    <x-alert>
-        Selamat Datang di Toko Kami
-    </x-alert>
-
-    <div class="container">
-        <div class="row mb-4 mt-4">
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">📦 Riwayat Pesanan</h5>
-                        <p class="card-text">Lihat semua pesanan Anda</p>
-                        <a href="{{ route('user.orders') }}" class="btn btn-primary">Lihat Pesanan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">🛒 Keranjang Saya</h5>
-                        <p class="card-text">Lanjutkan belanja</p>
-                        <a href="{{ route('cart.index') }}" class="btn btn-primary">Buka Keranjang</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="col-12 text-center my-4">
             <h1>Welcome to Our Store</h1>

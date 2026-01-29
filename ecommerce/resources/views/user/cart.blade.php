@@ -3,47 +3,23 @@
 @section('title','Keranjang')
 
 @section('content')
-<div class="container my-4">
-    <h2>Keranjang Belanja</h2>
+<div class="container my-5">
+    <h3 class="fw-bold mb-4">🛒 Keranjang Belanja</h3>
 
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Terjadi kesalahan:</strong>
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    {{-- Alert --}}
+    @foreach (['success','error'] as $msg)
+        @if (session($msg))
+            <div class="alert alert-{{ $msg == 'success' ? 'success' : 'danger' }} alert-dismissible fade show">
+                {{ session($msg) }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+    @endforeach
 
     @if ($cart && $cart->items->count())
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Produk</th>
-                    <th>Harga</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="row">
+            {{-- LIST ITEM --}}
+            <div class="col-lg-8">
                 @php $grandTotal = 0; @endphp
 
                 @foreach ($cart->items as $item)
@@ -52,51 +28,98 @@
                         $grandTotal += $total;
                     @endphp
 
-                    <tr>
-                        <td>
-                            <img src="{{ asset('storage/'.$item->product->image) }}"
-                                 width="60" class="me-2">
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center">
+                                    <img src="{{ asset('storage/'.$item->product->image) }}"
+                                         class="img-fluid rounded"
+                                         style="max-height:80px">
+                                </div>
 
-                            {{ $item->product->name }}
-                        </td>
+                                <div class="col-md-4">
+                                    <h6 class="fw-semibold mb-1">
+                                        {{ $item->product->name }}
+                                    </h6>
+                                    <small class="text-muted">
+                                        Rp {{ number_format($item->product->price) }}
+                                    </small>
+                                </div>
 
-                        <td>Rp {{ number_format($item->product->price) }}</td>
+                                <div class="col-md-3 text-center">
+                                    <div class="btn-group">
+                                        <a href="{{ route('cart.decrease', $item->id) }}"
+                                           class="btn btn-outline-secondary btn-sm">−</a>
 
-                        <td class="text-center">
-                            <a href="{{ route('cart.decrease', $item->id) }}"
-                               class="btn btn-sm btn-outline-secondary">−</a>
+                                        <span class="btn btn-light btn-sm disabled">
+                                            {{ $item->qty }}
+                                        </span>
 
-                            <span class="mx-2">{{ $item->qty }}</span>
+                                        <a href="{{ route('cart.increase', $item->id) }}"
+                                           class="btn btn-outline-secondary btn-sm">+</a>
+                                    </div>
+                                </div>
 
-                            <a href="{{ route('cart.increase', $item->id) }}"
-                               class="btn btn-sm btn-outline-secondary">+</a>
-                        </td>
+                                <div class="col-md-2 text-end fw-semibold">
+                                    Rp {{ number_format($total) }}
+                                </div>
 
-                        <td>Rp {{ number_format($total) }}</td>
-
-                        <td>
-                            <a href="{{ route('cart.remove', $item->id) }}"
-                               class="btn btn-danger btn-sm">
-                                Hapus
-                            </a>
-                        </td>
-                    </tr>
+                                <div class="col-md-1 text-end">
+                                    <a href="{{ route('cart.remove', $item->id) }}"
+                                       class="btn btn-sm btn-outline-danger">
+                                        ✕
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
+            </div>
 
-                <tr>
-                    <th colspan="3">Total</th>
-                    <th colspan="2">Rp {{ number_format($grandTotal) }}</th>
-                </tr>
-            </tbody>
-        </table>
+            {{-- SUMMARY --}}
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Ringkasan Belanja</h5>
 
-        <div class="d-flex gap-2 mt-3">
-            <a href="{{ route('beranda') }}" class="btn btn-secondary">Lanjut Belanja</a>
-            <a href="{{ route('checkout.index') }}" class="btn btn-primary">Checkout</a>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total Item</span>
+                            <span>{{ $cart->items->sum('qty') }}</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                            <span>Total</span>
+                            <span>Rp {{ number_format($grandTotal) }}</span>
+                        </div>
+
+                        <a href="{{ route('checkout.index') }}"
+                           class="btn btn-primary w-100 mb-2">
+                            Checkout
+                        </a>
+
+                        <a href="{{ route('beranda') }}"
+                           class="btn btn-outline-secondary w-100">
+                            Lanjut Belanja
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     @else
-        <p class="text-muted">Keranjang Anda masih kosong</p>
-        <a href="{{ route('beranda') }}" class="btn btn-primary">Mulai Belanja</a>
+        {{-- EMPTY STATE --}}
+        <div class="text-center py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+                 width="120" class="mb-3">
+
+            <h5 class="fw-bold">Keranjang Masih Kosong</h5>
+            <p class="text-muted">Yuk mulai belanja produk favoritmu</p>
+
+            <a href="{{ route('beranda') }}" class="btn btn-primary">
+                Mulai Belanja
+            </a>
+        </div>
     @endif
 </div>
 @endsection

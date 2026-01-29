@@ -3,108 +3,118 @@
 @section('title','Detail Pesanan')
 
 @section('content')
-<div class="container my-4">
+<div class="container-fluid my-4">
+
+    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>📋 Detail Pesanan #{{ $order->id }}</h3>
-        <a href="{{ route('admin.orders') }}" class="btn btn-secondary">
-            ← Kembali ke Daftar
-        </a>    
+        <div>
+            <h4 class="mb-1">Detail Pesanan</h4>
+            <small class="text-muted">Order #{{ $order->id }}</small>
+        </div>
+        <a href="{{ route('admin.orders') }}" class="btn btn-outline-secondary btn-sm">
+            ← Kembali
+        </a>
     </div>
 
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
     <div class="row">
-        <!-- Kolom Kiri: Info Pembeli -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">👤 Informasi Pembeli</h5>
-                </div>
+
+        {{-- INFO CUSTOMER --}}
+        <div class="col-lg-5 mb-4">
+            <div class="card border-0 shadow-sm rounded-lg h-100">
                 <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-3">Informasi Pembeli</h6>
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nama:</label>
-                        <p class="form-control-plaintext">{{ $order->name }}</p>
+                        <small class="text-muted">Nama</small>
+                        <div class="fw-bold">{{ $order->name }}</div>
                     </div>
-                    
+
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Email Pembeli:</label>
-                        <p class="form-control-plaintext">
+                        <small class="text-muted">Email</small>
+                        <div>
                             @if ($order->user)
-                                <a href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
+                                <a href="mailto:{{ $order->user->email }}">
+                                    {{ $order->user->email }}
+                                </a>
                             @else
-                                <span class="text-muted">-</span>
+                                <span class="text-muted">Guest</span>
                             @endif
-                        </p>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Alamat Pengiriman:</label>
-                        <p class="form-control-plaintext">{{ $order->address }}</p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nomor Telepon:</label>
-                        <p class="form-control-plaintext">
+                        <small class="text-muted">No. Telepon</small>
+                        <div>
                             <a href="tel:{{ $order->phone }}">{{ $order->phone }}</a>
-                        </p>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Metode Pembayaran:</label>
-                        <p class="form-control-plaintext">
-                            <span class="badge bg-info">
+                        <small class="text-muted">Alamat Pengiriman</small>
+                        <div>{{ $order->address }}</div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <small class="text-muted d-block">Pembayaran</small>
+                            <span class="badge bg-primary px-3 py-2">
                                 {{ strtoupper($order->payment_method) }}
                             </span>
-                        </p>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tanggal Pesanan:</label>
-                        <p class="form-control-plaintext">
-                            {{ $order->created_at->format('d F Y H:i') }}
-                        </p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block">Tanggal</small>
+                            <strong>{{ $order->created_at->format('d M Y') }}</strong>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Kolom Kanan: Status -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">📊 Update Status Pesanan</h5>
-                </div>
+        {{-- STATUS & ACTION --}}
+        <div class="col-lg-7 mb-4">
+            <div class="card border-0 shadow-sm rounded-lg h-100">
                 <div class="card-body">
+
+                    <h6 class="text-uppercase text-muted mb-4">Status Pesanan</h6>
+
                     @php
                         $statusColor = match($order->status) {
+                            'menunggu pembayaran' => 'danger',
                             'diproses' => 'warning',
                             'dikirim' => 'info',
                             'selesai' => 'success',
-                            'menunggu pembayaran' => 'danger',
                             'dibatalkan' => 'secondary',
                             default => 'secondary'
                         };
                     @endphp
-                    
-                    <div class="mb-4 text-center">
-                        <h4>
-                            <span class="badge bg-{{ $statusColor }} fs-6 py-2 px-3">
-                                {{ ucfirst($order->status) }}
-                            </span>
-                        </h4>
+
+                    {{-- STATUS BADGE --}}
+                    <div class="text-center mb-4">
+                        <span class="badge bg-{{ $statusColor }} px-4 py-2 fs-6">
+                            {{ strtoupper($order->status) }}
+                        </span>
                     </div>
 
+                    {{-- UPDATE STATUS --}}
                     <form method="POST" action="{{ route('admin.orders.status', $order->id) }}">
                         @csrf
-                        
+
                         <div class="mb-3">
-                            <label for="status" class="form-label fw-bold">Pilih Status:</label>
-                            <select name="status" id="status" class="form-select @error('status') is-invalid @enderror" required>
+                            <label class="form-label fw-semibold">
+                                Update Status Pesanan
+                            </label>
+                            <select name="status"
+                                    class="form-select @error('status') is-invalid @enderror"
+                                    required>
                                 <option value="">-- Pilih Status --</option>
                                 <option value="menunggu pembayaran" {{ $order->status == 'menunggu pembayaran' ? 'selected' : '' }}>
                                     ⏳ Menunggu Pembayaran
@@ -122,39 +132,38 @@
                                     ❌ Dibatalkan
                                 </option>
                             </select>
+
                             @error('status')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100">
-                            ✓ Update Status
+                        <button class="btn btn-success w-100">
+                            Update Status
                         </button>
                     </form>
 
-                    <hr>
-
-                    <div class="alert alert-info mb-0">
-                        <small>
-                            <strong>Catatan:</strong> Ketika status diubah, pelanggan akan melihat update ini di halaman riwayat pesanan mereka.
+                    <div class="alert alert-light border mt-4 mb-0">
+                        <small class="text-muted">
+                            Perubahan status akan langsung terlihat oleh pelanggan.
                         </small>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tabel Items -->
-    <div class="card shadow-sm mt-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">🛍️ Detail Produk</h5>
-        </div>
+    {{-- PRODUK --}}
+    <div class="card border-0 shadow-sm rounded-lg mt-4">
         <div class="card-body">
+            <h6 class="text-uppercase text-muted mb-3">Detail Produk</h6>
+
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-light">
+                <table class="table align-middle">
+                    <thead class="thead-light">
                         <tr>
-                            <th>Nama Produk</th>
+                            <th>Produk</th>
                             <th class="text-end">Harga</th>
                             <th class="text-center">Qty</th>
                             <th class="text-end">Subtotal</th>
@@ -162,27 +171,23 @@
                     </thead>
                     <tbody>
                         @foreach ($order->items as $item)
-                            <tr>
-                                <td>
-                                    <strong>{{ $item->product_name }}</strong><br>
-                                    <small class="text-muted">ID Produk: {{ $item->product_id }}</small>
-                                </td>
-                                <td class="text-end">
-                                    Rp {{ number_format($item->price) }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark">{{ $item->qty }}</span>
-                                </td>
-                                <td class="text-end">
-                                    <strong>Rp {{ number_format($item->subtotal) }}</strong>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <strong>{{ $item->product_name }}</strong><br>
+                                <small class="text-muted">#{{ $item->product_id }}</small>
+                            </td>
+                            <td class="text-end">Rp {{ number_format($item->price) }}</td>
+                            <td class="text-center">{{ $item->qty }}</td>
+                            <td class="text-end fw-bold">
+                                Rp {{ number_format($item->subtotal) }}
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr class="table-dark text-white">
-                            <th colspan="3" class="text-end">TOTAL PESANAN:</th>
-                            <th class="text-end">
+                        <tr>
+                            <th colspan="3" class="text-end">TOTAL</th>
+                            <th class="text-end text-primary">
                                 Rp {{ number_format($order->total) }}
                             </th>
                         </tr>
@@ -192,10 +197,5 @@
         </div>
     </div>
 
-    <div class="mt-4">
-        <a href="{{ route('admin.orders') }}" class="btn btn-secondary">
-            ← Kembali ke Daftar Pesanan
-        </a>
-    </div>
 </div>
 @endsection
