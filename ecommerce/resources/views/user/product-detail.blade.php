@@ -4,26 +4,62 @@
 
 @section('content')
 <div class="container my-5">
-    <div class="row">
+    <div class="row g-4 align-items-center">
+
+        <!-- PRODUCT IMAGE -->
         <div class="col-md-6">
-            <img src="{{ asset('storage/'.$product->image) }}"
-                 class="img-fluid rounded">
+            <div class="card product-card border-0 shadow-lg">
+                <img 
+                    src="{{ asset('storage/'.$product->image) }}"
+                    alt="{{ $product->name }}"
+                    class="img-fluid product-img rounded"
+                >
+            </div>
         </div>
 
+        <!-- PRODUCT INFO -->
         <div class="col-md-6">
-            <h2>{{ $product->name }}</h2>
-            <p class="text-muted">
-                Rp {{ number_format($product->price) }}
-            </p>
+            <div class="card p-4 border-0 shadow-sm">
+                
+                <!-- Title -->
+                <h2 class="fw-bold mb-2">
+                    {{ $product->name }}
+                </h2>
 
-            <p>{{ $product->description }}</p>
+                <!-- Price -->
+                <h4 class="text-success fw-semibold mb-3">
+                    Rp {{ number_format($product->price) }}
+                </h4>
 
-            <a href="{{ route('cart.add', ['id' => $product->id]) }}" 
-                class="btn btn-success mt-2">
-                Tambah ke Keranjang
-            </a>
-            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">← Kembali</a>
+                <!-- Divider -->
+                <hr class="border-slate-700">
+
+                <!-- Description -->
+                <p class="text-muted mb-4" style="line-height:1.7">
+                    {{ $product->description }}
+                </p>
+
+                <!-- ACTION -->
+                <div class="d-flex flex-wrap gap-2">
+                    <a 
+                        href="{{ route('cart.add', ['id' => $product->id]) }}"
+                        class="btn btn-success px-4 py-2"
+                    >
+                        <i class="bi bi-cart-plus me-1"></i>
+                        Tambah ke Keranjang
+                    </a>
+
+                    <a 
+                        href="{{ route('user.dashboard') }}"
+                        class="btn btn-outline-secondary px-4 py-2"
+                    >
+                        ← Kembali
+                    </a>
+                </div>
+
+            </div>
         </div>
+
     </div>
 </div>
 @endsection

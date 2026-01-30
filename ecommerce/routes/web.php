@@ -13,7 +13,7 @@ use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
-| HALAMAN UMUM
+| HALAMAN PUBLIK (TANPA LOGIN)
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
@@ -21,9 +21,10 @@ Route::get('/product', [HomeController::class, 'product'])->name('product');
 Route::get('/product/{product}', [HomeController::class, 'show'])->name('product.show');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 
+
 /*
 |--------------------------------------------------------------------------
-| PROFILE (BREEZE)
+| PROFILE USER (BREEZE)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
@@ -32,16 +33,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| USER
+| USER AREA (USER + ADMIN BOLEH AKSES)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'role:user,admin'])->group(function () {
 
+    // Dashboard user (admin bisa preview)
     Route::get('/user/dashboard', [HomeController::class, 'index'])
         ->name('user.dashboard');
 
+    // CART
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::get('/add/{id}', [CartController::class, 'add'])->name('add');
@@ -50,16 +54,19 @@ Route::middleware(['auth', 'role:user'])->group(function () {
         Route::get('/decrease/{id}', [CartController::class, 'decrease'])->name('decrease');
     });
 
+    // CHECKOUT
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
+    // ORDER HISTORY USER
     Route::get('/orders', [UserOrderController::class, 'history'])->name('user.orders');
     Route::get('/orders/{id}', [UserOrderController::class, 'detail'])->name('user.orders.detail');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| ADMIN
+| ADMIN AREA (ADMIN ONLY)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])
@@ -67,16 +74,21 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
+        // Dashboard admin
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
+        // CRUD Product
         Route::resource('products', ProductController::class);
-        Route::get('/product/{product}', [ProductController::class, 'show'])
-        ->name('product.show');
 
+        // Detail product admin
+        Route::get('/product/{product}', [ProductController::class, 'show'])
+            ->name('product.show');
+
+        // Product Category
         Route::post('/product-category', [ProductCategoryController::class, 'store'])
             ->name('product-category.store');
-            
+
         Route::get('/product-category/{id}/edit', [ProductCategoryController::class, 'edit'])
             ->name('product-category.edit');
 
@@ -86,10 +98,16 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/product-category/{id}', [ProductCategoryController::class, 'destroy'])
             ->name('product-category.destroy');
 
-
+        // Order Admin
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES (LOGIN REGISTER LOGOUT)
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';

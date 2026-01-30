@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProductController extends Controller
 {
@@ -30,29 +32,45 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        $request->validate([
-            'name'        => 'required',
-            'description' => 'required',
-            'price'       => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'image'       => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        $data = $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'description' => 'nullable',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('products', 'public');
+        if ($request->hasFile('image')) {
 
-        Product::create([
-            'name'        => $request->name,
-            'description' => $request->description,
-            'price'       => $request->price,
-            'category_id' => $request->category_id, // 🔑 WAJIB
-            'image'       => $imagePath,
-        ]);
+            $manager = new ImageManager(new Driver());
 
-        return redirect('/admin/products')
+            $image = $manager->read($request->file('image'));
+
+            // resize proporsional
+            $image->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // canvas biar rapi
+            $canvas = $manager->create(800, 800)->fill('#020617');
+            $canvas->place($image, 'center');
+
+            $filename = uniqid() . '.webp';
+
+            $canvas->toWebp(85)
+                ->save(storage_path('app/public/products/' . $filename));
+
+            $data['image'] = 'products/' . $filename;
+        }
+
+        Product::create($data);
+
+        return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil ditambahkan');
     }
+
 
     public function edit(string $id)
     {
