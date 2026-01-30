@@ -16,8 +16,8 @@
 
 {{-- HEADER --}}
 <div class="col-12 text-center my-5">
-    <h1 class="fw-bold">Welcome to Our Store</h1>
-    <p class="lead text-muted">Discover our exclusive products below</p>
+    <h1 class="fw-bold">Selamat Datang Di Toko Kami</h1>
+    <p class="lead text-muted">Temukan produk terbaik kami di sini</p>
 </div>
 
 {{-- FILTER CATEGORY --}}
