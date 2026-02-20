@@ -15,7 +15,7 @@
     <div class="row align-items-center mb-5">
         <div class="col-md-6 mb-4 mb-md-0">
             <img 
-                src="https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83"
+                src="/storage/products/logo.png"
                 class="img-fluid rounded shadow"
                 alt="About Image"
             >

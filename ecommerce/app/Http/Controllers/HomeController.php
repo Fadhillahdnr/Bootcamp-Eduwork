@@ -22,6 +22,23 @@ class HomeController extends Controller
 
         return view('user.dashboard', compact('products', 'categories'));
     }
+
+    /**
+     * Display product listing page
+     */
+    public function product(Request $request)
+    {
+        $categories = Category::all();
+
+        $products = Product::with('category')
+            ->when($request->category, function ($query) use ($request) {
+                $query->where('category_id', $request->category);
+            })
+            ->latest()
+            ->paginate(12);
+
+        return view('user.dashboard', compact('products', 'categories'));
+    }
     
     public function show(Product $product)
     {

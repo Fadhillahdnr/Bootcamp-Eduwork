@@ -8,7 +8,7 @@
     {{-- HEADER --}}
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-            <h4 class="fw-bold mb-1">
+            <h4 style="color: #aeaeae" class="fw-bold mb-1">
                 <i class="bi bi-box-seam me-2 text-primary"></i>Daftar Pesanan
             </h4>
             <small class="text-muted">
@@ -34,7 +34,7 @@
     {{-- CARD --}}
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-            <h6 class="fw-semibold mb-0">
+            <h6 style="color: black" class="fw-semibold mb-0">
                 Total Pesanan
                 <span class="badge bg-primary ms-2">
                     {{ $orders->total() }}

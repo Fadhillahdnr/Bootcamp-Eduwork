@@ -81,10 +81,6 @@ Route::middleware(['auth', 'role:admin'])
         // CRUD Product
         Route::resource('products', ProductController::class);
 
-        // Detail product admin
-        Route::get('/product/{product}', [ProductController::class, 'show'])
-            ->name('product.show');
-
         // Product Category
         Route::post('/product-category', [ProductCategoryController::class, 'store'])
             ->name('product-category.store');

@@ -21,7 +21,7 @@
             </div>
 
             {{-- KATEGORI PRODUK --}}
-            <div class="border rounded p-3 mb-4 bg-light">
+            <div class="border rounded p-3 mb-4 bg-dark text-white">
 
                 {{-- TAMBAH KATEGORI --}}
                 <form method="POST"
@@ -53,7 +53,7 @@
                         Daftar Kategori
                     </label>
 
-                    <ul class="list-group list-group-sm">
+                    <ul class="list-group list-group-sm ">
                         @foreach ($categories as $category)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
 

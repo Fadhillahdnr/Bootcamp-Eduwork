@@ -147,6 +147,6 @@ class ProductController extends Controller
             session()->put($sessionKey, true);
         }
 
-        return view('user.products.show', compact('product'));
+        return view('user.product-detail', compact('product'));
     }
 }

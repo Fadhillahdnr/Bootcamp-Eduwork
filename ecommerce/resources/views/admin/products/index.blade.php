@@ -11,7 +11,7 @@
             {{-- HEADER --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="fw-bold mb-1">📦 Daftar Produk</h4>
+                    <h4 style="color: #aeaeae" class="fw-bold mb-1">📦 Daftar Produk</h4>
                     <small class="text-muted">
                         Kelola seluruh produk yang tersedia
                     </small>
@@ -78,7 +78,7 @@
                                              class="rounded border object-fit-cover">
 
                                         <div>
-                                            <div class="fw-semibold text-dark">
+                                            <div class="fw-semibold">
                                                 {{ $product->name }}
                                             </div>
                                             <small class="text-muted">
