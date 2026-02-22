@@ -15,7 +15,6 @@
             {{-- ================= LEFT ================= --}}
             <div class="flex items-center gap-10">
 
-                {{-- LOGO --}}
                 <a href="{{ route('beranda') }}" class="flex items-center gap-3 group">
                     <x-application-logo class="h-9 w-auto transition group-hover:scale-105"
                         style="fill: var(--primary);" />
@@ -25,7 +24,6 @@
                     </span>
                 </a>
 
-                {{-- NAV LINKS --}}
                 <div class="hidden sm:flex items-center gap-6">
                     @php
                         function navActive($route) {
@@ -51,17 +49,22 @@
             <div class="hidden sm:flex items-center gap-4">
 
                 @auth
-                    {{-- USER DROPDOWN --}}
                     <div class="relative" x-data="{ openUser: false }">
                         <button @click="openUser = !openUser"
                             class="flex items-center gap-3 px-3 py-2 rounded-xl transition hover:scale-[1.02]"
                             style="background: var(--bg-card); border:1px solid var(--border-soft);">
 
-                            {{-- AVATAR --}}
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
-                                 style="background: var(--primary); color:white;">
-                                {{ strtoupper(substr(Auth::user()->name,0,1)) }}
-                            </div>
+                            {{-- AVATAR FOTO --}}
+                            @if(Auth::user()->profile_photo)
+                                <img src="{{ Auth::user()->profile_photo_url }}"
+                                     alt="avatar"
+                                     class="w-8 h-8 rounded-full object-cover border">
+                            @else
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                                     style="background: var(--primary); color:white;">
+                                    {{ strtoupper(substr(Auth::user()->name,0,1)) }}
+                                </div>
+                            @endif
 
                             <span class="font-medium"
                                   style="color: var(--text-main);">
@@ -122,7 +125,24 @@
         <a href="{{ route('about') }}" class="mobile-link">Tentang Kami</a>
 
         @auth
+            <div class="flex items-center gap-3 mb-3">
+                @if(Auth::user()->profile_photo)
+                    <img src="{{ Auth::user()->profile_photo_url }}"
+                         class="w-10 h-10 rounded-full object-cover border">
+                @else
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold"
+                         style="background: var(--primary); color:white;">
+                        {{ strtoupper(substr(Auth::user()->name,0,1)) }}
+                    </div>
+                @endif
+
+                <div class="text-sm font-medium" style="color: var(--text-main);">
+                    {{ Auth::user()->name }}
+                </div>
+            </div>
+
             <a href="{{ route('user.orders') }}" class="mobile-link">📦 Riwayat Pesanan</a>
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="mobile-link text-danger w-full text-left">
